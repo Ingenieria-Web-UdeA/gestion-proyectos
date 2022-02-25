@@ -8,6 +8,7 @@ const UserTypes = gql`
     image: String
     role: Role
     emailVerified: Date
+    isDeveloperOf: [Project]
     createdAt: Date
     updatedAt: Date
   }

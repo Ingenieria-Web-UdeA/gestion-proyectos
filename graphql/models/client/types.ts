@@ -4,7 +4,7 @@ const ClientTypes = gql`
   type Client {
     id: ID
     name: String
-    # projects: [Project]
+    projects: [Project]
     createdAt: Date
     updatedAt: Date
   }
@@ -15,6 +15,8 @@ const ClientTypes = gql`
 
   type Mutation {
     createClient(name: String!): Client
+    updateClient(id: String!, name: String!): Client
+    deleteClient(id: String!): Client
   }
 `;
 

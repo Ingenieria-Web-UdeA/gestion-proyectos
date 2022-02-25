@@ -15,6 +15,25 @@ const ClientResolvers = {
       });
       return nuevoCliente;
     },
+    updateClient: async (parent, args) => {
+      return await prisma.client.update({
+        where: {
+          id: args.id,
+        },
+        data: {
+          name: {
+            set: args.name,
+          },
+        },
+      });
+    },
+    deleteClient: async (parent, args) => {
+      return await prisma.client.delete({
+        where: {
+          id: args.id,
+        },
+      });
+    },
   },
 };
 

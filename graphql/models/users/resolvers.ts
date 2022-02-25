@@ -9,6 +9,17 @@ const UserResolvers = {
         },
       });
     },
+    isDeveloperOf: async (parent, args) => {
+      return await prisma.project.findMany({
+        where: {
+          developers: {
+            some: {
+              id: parent.id,
+            },
+          },
+        },
+      });
+    },
   },
   Query: {
     getUsers: async (parent, args) => {
