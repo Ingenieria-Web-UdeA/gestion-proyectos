@@ -4,22 +4,28 @@ import { GET_CLIENTES } from 'graphql/queries/clients';
 import useFormData from 'hooks/useFormData';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+import { ButtonLoading } from '@components/ButtonLoading';
 
 const NewClient = () => {
+  const router = useRouter();
   const { form, formData, updateFormData } = useFormData(null);
   const [createClient, { data, loading }] = useMutation(CREATE_CLIENT, {
     refetchQueries: [GET_CLIENTES],
   });
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
     console.log('cliente:', formData);
-    createClient({
+    await createClient({
       variables: {
         name: formData.name,
       },
-      refetchQueries: [GET_CLIENTES],
     });
+    toast.success('Cliente creado con éxito');
+    router.push('/clients');
+    //form.current.reset();
   };
 
   useEffect(() => {
@@ -42,9 +48,7 @@ const NewClient = () => {
           <span>Nombre del Cliente</span>
           <input name='name' type='text' />
         </label>
-        <button type='submit' className='button-primary'>
-          Crear Cliente
-        </button>
+        <ButtonLoading type='submit' loading={loading} text='Crear Cliente' />
       </form>
     </div>
   );

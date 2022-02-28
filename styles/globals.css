@@ -5,6 +5,9 @@
 .button-primary {
   @apply bg-indigo-500 py-1 px-2 text-white rounded-lg shadow-xl hover:bg-indigo-800 cursor-pointer;
 }
+.button-secondary {
+  @apply bg-gray-500 py-1 px-2 text-white rounded-lg shadow-xl hover:bg-gray-800 cursor-pointer;
+}
 
 input {
   @apply p-1 outline-none border border-indigo-300 rounded-lg my-2 focus:border-indigo-700;
