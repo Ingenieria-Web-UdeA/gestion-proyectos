@@ -7,8 +7,10 @@ import useFormData from 'hooks/useFormData';
 import { DELETE_CLIENT, EDIT_CLIENT } from 'graphql/mutations/client';
 import { toast } from 'react-toastify';
 import { ButtonLoading } from '@components/ButtonLoading';
+import PrivateComponent from '@components/PrivateComponent';
+import { getSession } from 'next-auth/react';
 
-const IndexClients = () => {
+const IndexClients = ({}) => {
   const { data, loading } = useQuery(GET_CLIENTES, {
     fetchPolicy: 'cache-and-network',
   });
@@ -17,18 +19,24 @@ const IndexClients = () => {
 
   return (
     <div className='flex flex-col items-center p-10'>
-      <Link href='/clients/new' passHref={true}>
-        <div className='self-end button-primary'>Nuevo Cliente</div>
-      </Link>
+      <PrivateComponent roleList={['Admin']}>
+        <Link href='/clients/new' passHref={true}>
+          <div className='self-end button-primary'>Nuevo Cliente</div>
+        </Link>
+      </PrivateComponent>
       <h2 className='my-4 text-3xl font-bold text-gray-800'>Clientes</h2>
       <div className='hidden lg:block'>
         <table>
           <thead>
-            <th>ID Cliente</th>
+            <PrivateComponent roleList={['Admin']}>
+              <th>ID Cliente</th>
+            </PrivateComponent>
             <th>Nombre</th>
             <th>Fecha de Actualización</th>
             <th>Fecha de Creación</th>
-            <th>Acciones</th>
+            <PrivateComponent roleList={['Admin']}>
+              <th>Acciones</th>
+            </PrivateComponent>
           </thead>
           <tbody>
             {data.getClients.map((c) => {
@@ -71,13 +79,17 @@ const ClienteResponisve = ({ client }) => {
 const Cliente = ({ client }) => {
   return (
     <tr>
-      <td>{client.id}</td>
+      <PrivateComponent roleList={['Admin']}>
+        <td>{client.id}</td>
+      </PrivateComponent>
       <td>{client.name}</td>
       <td>{client.updatedAt}</td>
       <td>{client.createdAt}</td>
-      <td>
-        <EditDeleteButtons client={client} />
-      </td>
+      <PrivateComponent roleList={['Admin']}>
+        <td>
+          <EditDeleteButtons client={client} />
+        </td>
+      </PrivateComponent>
     </tr>
   );
 };

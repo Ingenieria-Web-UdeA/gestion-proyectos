@@ -2,7 +2,8 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { ApolloClient, InMemoryCache, from, HttpLink, ApolloProvider } from '@apollo/client';
-import PublicLayout from '../layout/PublicLayout';
+import PrivateLayout from '../layout/PrivateLayout';
+import { SessionProvider } from 'next-auth/react';
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -14,18 +15,20 @@ const client = new ApolloClient({
   ]),
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <ApolloProvider client={client}>
-      <div>
-        <Head>
-          <title>Proyectos</title>
-        </Head>
-        <PublicLayout>
-          <Component {...pageProps} />
-        </PublicLayout>
-      </div>
-    </ApolloProvider>
+    <SessionProvider session={session}>
+      <ApolloProvider client={client}>
+        <div>
+          <Head>
+            <title>Proyectos</title>
+          </Head>
+          <PrivateLayout>
+            <Component {...pageProps} />
+          </PrivateLayout>
+        </div>
+      </ApolloProvider>
+    </SessionProvider>
   );
 }
 
