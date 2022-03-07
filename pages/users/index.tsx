@@ -26,19 +26,16 @@ const Index = () => {
         method: 'get',
         headers: { 'Content-Type': 'application/json' },
       };
-      const users = await axios.request(options);
-      setUsers(users.data.datos);
+      const userResponse = await axios.request(options);
+      setUsers(userResponse.data.datos);
     };
     fetchUsuarios();
   }, []);
 
-  useEffect(() => {
-    console.log(users);
-  }, [users]);
-
   return (
     <div>
       Usuarios
+      {users && <span>users loaded</span>}
       <Link href='/users/new'>Crear nuevo usuario</Link>
     </div>
   );

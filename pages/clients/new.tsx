@@ -1,9 +1,9 @@
+import React from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_CLIENT } from 'graphql/mutations/client';
 import { GET_CLIENTES } from 'graphql/queries/clients';
 import useFormData from 'hooks/useFormData';
 import Link from 'next/link';
-import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { ButtonLoading } from '@components/ButtonLoading';
@@ -13,9 +13,9 @@ export async function getServerSideProps(context) {
   const data: any = await getSession({ req: context.req });
   const role = data.user.role.name;
 
-  if (role !== 'Admin') {
-    console.log('no autorizado');
-  }
+  // if (role !== 'Admin') {
+  //   console.log('no autorizado');
+  // }
   return {
     props: { auth: role === 'Admin' },
   };
@@ -30,7 +30,7 @@ const NewClient = ({ auth }) => {
 
   const submitForm = async (e) => {
     e.preventDefault();
-    console.log('cliente:', formData);
+
     await createClient({
       variables: {
         name: formData.name,
@@ -38,20 +38,21 @@ const NewClient = ({ auth }) => {
     });
     toast.success('Cliente creado con éxito');
     router.push('/clients');
-    //form.current.reset();
+    // form.current.reset();
   };
 
-  useEffect(() => {
-    console.log('data mutation', data);
-  }, [data]);
-
   if (!auth) {
-    return <div className='bg-red-500 text-white text-3xl font-bold'>NO ESTAS AUTORIZADO</div>;
+    return (
+      <div className='bg-red-500 text-white text-3xl font-bold'>
+        NO ESTAS AUTORIZADO
+      </div>
+    );
   }
 
   return (
     <div className='flex flex-col items-center p-10'>
-      <Link href='/clients' passHref={true}>
+      {data && <div>data loaded</div>}
+      <Link href='/clients' passHref>
         <i className='fas fa-arrow-left self-start' />
       </Link>
       <h2>Nuevo Cliente</h2>
@@ -65,7 +66,7 @@ const NewClient = ({ auth }) => {
           <span>Nombre del Cliente</span>
           <input name='name' type='text' />
         </label>
-        <ButtonLoading type='submit' loading={loading} text='Crear Cliente' />
+        <ButtonLoading isSubmit loading={loading} text='Crear Cliente' />
       </form>
     </div>
   );

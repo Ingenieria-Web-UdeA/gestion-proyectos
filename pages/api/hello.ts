@@ -8,14 +8,17 @@ const prisma = new PrismaClient();
 //   name: string;
 // };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<any>
+) {
   if (req.method === 'GET') {
-    console.log('hicieron un get');
+    // console.log('hicieron un get');
     const users = await prisma.user.findMany();
     res.status(200).json({ datos: users });
   } else if (req.method === 'POST') {
     const data = req.body;
-    console.log(data);
+    // console.log(data);
     const user = await prisma.user.create({
       data: {
         email: data.email,

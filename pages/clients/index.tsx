@@ -8,9 +8,9 @@ import { DELETE_CLIENT, EDIT_CLIENT } from 'graphql/mutations/client';
 import { toast } from 'react-toastify';
 import { ButtonLoading } from '@components/ButtonLoading';
 import PrivateComponent from '@components/PrivateComponent';
-import { getSession } from 'next-auth/react';
+// import { getSession } from 'next-auth/react';
 
-const IndexClients = ({}) => {
+const IndexClients = () => {
   const { data, loading } = useQuery(GET_CLIENTES, {
     fetchPolicy: 'cache-and-network',
   });
@@ -20,7 +20,7 @@ const IndexClients = ({}) => {
   return (
     <div className='flex flex-col items-center p-10'>
       <PrivateComponent roleList={['Admin']}>
-        <Link href='/clients/new' passHref={true}>
+        <Link href='/clients/new' passHref>
           <div className='self-end button-primary'>Nuevo Cliente</div>
         </Link>
       </PrivateComponent>
@@ -39,9 +39,9 @@ const IndexClients = ({}) => {
             </PrivateComponent>
           </thead>
           <tbody>
-            {data.getClients.map((c) => {
-              return <Cliente key={c.id} client={c} />;
-            })}
+            {data.getClients.map((c) => (
+              <Cliente key={c.id} client={c} />
+            ))}
           </tbody>
         </table>
       </div>
@@ -52,47 +52,41 @@ const IndexClients = ({}) => {
   );
 };
 
-const ClientesResponsive = ({ clients }) => {
-  return (
+const ClientesResponsive = ({ clients }) => (
+  <div>
+    {clients.map((client) => (
+      <ClienteResponisve key={client.id} client={client} />
+    ))}
+  </div>
+);
+
+const ClienteResponisve = ({ client }) => (
+  <div className='bg-gray-200 flex flex-col my-4 p-4 rounded-lg shadow-lg'>
+    <div className='flex flex-col'>
+      <span>Nombre:</span>
+      <span>{client.name}</span>
+    </div>
     <div>
-      {clients.map((client) => {
-        return <ClienteResponisve key={client.id} client={client} />;
-      })}
+      <EditDeleteButtons client={client} />
     </div>
-  );
-};
+  </div>
+);
 
-const ClienteResponisve = ({ client }) => {
-  return (
-    <div className='bg-gray-200 flex flex-col my-4 p-4 rounded-lg shadow-lg'>
-      <div className='flex flex-col'>
-        <span>Nombre:</span>
-        <span>{client.name}</span>
-      </div>
-      <div>
+const Cliente = ({ client }) => (
+  <tr>
+    <PrivateComponent roleList={['Admin']}>
+      <td>{client.id}</td>
+    </PrivateComponent>
+    <td>{client.name}</td>
+    <td>{client.updatedAt}</td>
+    <td>{client.createdAt}</td>
+    <PrivateComponent roleList={['Admin']}>
+      <td>
         <EditDeleteButtons client={client} />
-      </div>
-    </div>
-  );
-};
-
-const Cliente = ({ client }) => {
-  return (
-    <tr>
-      <PrivateComponent roleList={['Admin']}>
-        <td>{client.id}</td>
-      </PrivateComponent>
-      <td>{client.name}</td>
-      <td>{client.updatedAt}</td>
-      <td>{client.createdAt}</td>
-      <PrivateComponent roleList={['Admin']}>
-        <td>
-          <EditDeleteButtons client={client} />
-        </td>
-      </PrivateComponent>
-    </tr>
-  );
-};
+      </td>
+    </PrivateComponent>
+  </tr>
+);
 
 const EditDeleteButtons = ({ client }) => {
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -105,13 +99,14 @@ const EditDeleteButtons = ({ client }) => {
     <div>
       <div className='flex w-full justify-center'>
         <button
+          type='button'
           onClick={() => {
             setOpenEditDialog(true);
           }}
         >
           <i className='mx-4 fas fa-pen text-yellow-500 hover:text-yellow-700 cursor-pointer' />
         </button>
-        <button onClick={() => setOpenDeleteDialog(true)}>
+        <button type='button' onClick={() => setOpenDeleteDialog(true)}>
           <i className='mx-4 fas fa-trash text-red-500 hover:text-red-700 cursor-pointer' />
         </button>
       </div>
@@ -132,7 +127,6 @@ const EditCliente = ({ client, closeDialog }) => {
   });
   const submitForm = async (e) => {
     e.preventDefault();
-    console.log(formData);
     await updateClient({
       variables: {
         updateClientId: client.id,
@@ -144,7 +138,9 @@ const EditCliente = ({ client, closeDialog }) => {
   };
   return (
     <div className='p-10 flex flex-col items-center'>
-      <h2 className='my-3 text-2xl font-extrabold text-gray-900'>Editar Cliente</h2>
+      <h2 className='my-3 text-2xl font-extrabold text-gray-900'>
+        Editar Cliente
+      </h2>
       <form
         ref={form}
         onChange={updateFormData}
@@ -155,7 +151,7 @@ const EditCliente = ({ client, closeDialog }) => {
           <span>Nombre del Cliente:</span>
           <input name='name' defaultValue={client.name} />
         </label>
-        <ButtonLoading type='submit' loading={loading} text='Editar Cliente' />
+        <ButtonLoading isSubmit loading={loading} text='Editar Cliente' />
       </form>
     </div>
   );
@@ -179,12 +175,27 @@ const DeleteCliente = ({ client, closeDialog }) => {
   };
   return (
     <div className='p-10 flex flex-col items-center'>
-      <h2 className='text-2xl text-gray-900 font-extrabold my-3'>Eliminar Cliente</h2>
-      <span className='text-red-500 font-bold my-2'>Esta acción no se puede deshacer.</span>
-      <span className='my-2'>¿Está seguro de que desea eliminar el cliente?</span>
+      <h2 className='text-2xl text-gray-900 font-extrabold my-3'>
+        Eliminar Cliente
+      </h2>
+      <span className='text-red-500 font-bold my-2'>
+        Esta acción no se puede deshacer.
+      </span>
+      <span className='my-2'>
+        ¿Está seguro de que desea eliminar el cliente?
+      </span>
       <div className='flex my-2'>
-        <ButtonLoading type='button' onClick={deleteFunction} loading={loading} text='Confirmar' />
-        <button className='button-secondary mx-2' onClick={cancel}>
+        <ButtonLoading
+          isSubmit={false}
+          onClick={deleteFunction}
+          loading={loading}
+          text='Confirmar'
+        />
+        <button
+          type='button'
+          className='button-secondary mx-2'
+          onClick={cancel}
+        >
           Cancelar
         </button>
       </div>
