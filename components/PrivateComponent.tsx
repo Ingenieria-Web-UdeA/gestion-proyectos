@@ -1,7 +1,7 @@
 import { useSession } from 'next-auth/react';
 import React, { useEffect } from 'react';
 
-const PrivateComponent = ({ roleList, children }) => {
+function PrivateComponent({ roleList, children }) {
   const { data: session }: any = useSession();
   useEffect(() => {
     console.log(session);
@@ -14,6 +14,6 @@ const PrivateComponent = ({ roleList, children }) => {
     return children;
   }
   return <></>;
-};
+}
 
 export default PrivateComponent;

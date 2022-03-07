@@ -10,7 +10,7 @@ import { ButtonLoading } from '@components/ButtonLoading';
 import PrivateComponent from '@components/PrivateComponent';
 import { getSession } from 'next-auth/react';
 
-const IndexClients = ({}) => {
+function IndexClients() {
   const { data, loading } = useQuery(GET_CLIENTES, {
     fetchPolicy: 'cache-and-network',
   });
@@ -20,7 +20,7 @@ const IndexClients = ({}) => {
   return (
     <div className='flex flex-col items-center p-10'>
       <PrivateComponent roleList={['Admin']}>
-        <Link href='/clients/new' passHref={true}>
+        <Link href='/clients/new' passHref>
           <div className='self-end button-primary'>Nuevo Cliente</div>
         </Link>
       </PrivateComponent>
@@ -39,9 +39,9 @@ const IndexClients = ({}) => {
             </PrivateComponent>
           </thead>
           <tbody>
-            {data.getClients.map((c) => {
-              return <Cliente key={c.id} client={c} />;
-            })}
+            {data.getClients.map((c) => (
+              <Cliente key={c.id} client={c} />
+            ))}
           </tbody>
         </table>
       </div>
@@ -50,19 +50,19 @@ const IndexClients = ({}) => {
       </div>
     </div>
   );
-};
+}
 
-const ClientesResponsive = ({ clients }) => {
+function ClientesResponsive({ clients }) {
   return (
     <div>
-      {clients.map((client) => {
-        return <ClienteResponisve key={client.id} client={client} />;
-      })}
+      {clients.map((client) => (
+        <ClienteResponisve key={client.id} client={client} />
+      ))}
     </div>
   );
-};
+}
 
-const ClienteResponisve = ({ client }) => {
+function ClienteResponisve({ client }) {
   return (
     <div className='bg-gray-200 flex flex-col my-4 p-4 rounded-lg shadow-lg'>
       <div className='flex flex-col'>
@@ -74,9 +74,9 @@ const ClienteResponisve = ({ client }) => {
       </div>
     </div>
   );
-};
+}
 
-const Cliente = ({ client }) => {
+function Cliente({ client }) {
   return (
     <tr>
       <PrivateComponent roleList={['Admin']}>
@@ -92,9 +92,9 @@ const Cliente = ({ client }) => {
       </PrivateComponent>
     </tr>
   );
-};
+}
 
-const EditDeleteButtons = ({ client }) => {
+function EditDeleteButtons({ client }) {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const closeDialog = () => {
@@ -123,9 +123,9 @@ const EditDeleteButtons = ({ client }) => {
       </Dialog>
     </div>
   );
-};
+}
 
-const EditCliente = ({ client, closeDialog }) => {
+function EditCliente({ client, closeDialog }) {
   const { form, formData, updateFormData } = useFormData(null);
   const [updateClient, { loading }] = useMutation(EDIT_CLIENT, {
     refetchQueries: [GET_CLIENTES],
@@ -144,7 +144,9 @@ const EditCliente = ({ client, closeDialog }) => {
   };
   return (
     <div className='p-10 flex flex-col items-center'>
-      <h2 className='my-3 text-2xl font-extrabold text-gray-900'>Editar Cliente</h2>
+      <h2 className='my-3 text-2xl font-extrabold text-gray-900'>
+        Editar Cliente
+      </h2>
       <form
         ref={form}
         onChange={updateFormData}
@@ -159,9 +161,9 @@ const EditCliente = ({ client, closeDialog }) => {
       </form>
     </div>
   );
-};
+}
 
-const DeleteCliente = ({ client, closeDialog }) => {
+function DeleteCliente({ client, closeDialog }) {
   const [deleteClient, { loading }] = useMutation(DELETE_CLIENT, {
     refetchQueries: [GET_CLIENTES],
   });
@@ -179,17 +181,28 @@ const DeleteCliente = ({ client, closeDialog }) => {
   };
   return (
     <div className='p-10 flex flex-col items-center'>
-      <h2 className='text-2xl text-gray-900 font-extrabold my-3'>Eliminar Cliente</h2>
-      <span className='text-red-500 font-bold my-2'>Esta acción no se puede deshacer.</span>
-      <span className='my-2'>¿Está seguro de que desea eliminar el cliente?</span>
+      <h2 className='text-2xl text-gray-900 font-extrabold my-3'>
+        Eliminar Cliente
+      </h2>
+      <span className='text-red-500 font-bold my-2'>
+        Esta acción no se puede deshacer.
+      </span>
+      <span className='my-2'>
+        ¿Está seguro de que desea eliminar el cliente?
+      </span>
       <div className='flex my-2'>
-        <ButtonLoading type='button' onClick={deleteFunction} loading={loading} text='Confirmar' />
+        <ButtonLoading
+          type='button'
+          onClick={deleteFunction}
+          loading={loading}
+          text='Confirmar'
+        />
         <button className='button-secondary mx-2' onClick={cancel}>
           Cancelar
         </button>
       </div>
     </div>
   );
-};
+}
 
 export default IndexClients;

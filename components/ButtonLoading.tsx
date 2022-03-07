@@ -7,7 +7,12 @@ interface ButtonLoadingProps {
   onClick?: () => {};
 }
 
-const ButtonLoading = ({ loading, text, type = 'submit', onClick }: ButtonLoadingProps) => {
+function ButtonLoading({
+  loading,
+  text,
+  type = 'submit',
+  onClick,
+}: ButtonLoadingProps) {
   return (
     <button type={type} className='button-primary' onClick={onClick}>
       {loading ? (
@@ -19,6 +24,6 @@ const ButtonLoading = ({ loading, text, type = 'submit', onClick }: ButtonLoadin
       )}
     </button>
   );
-};
+}
 
 export { ButtonLoading };

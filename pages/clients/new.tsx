@@ -21,7 +21,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-const NewClient = ({ auth }) => {
+function NewClient({ auth }) {
   const router = useRouter();
   const { form, formData, updateFormData } = useFormData(null);
   const [createClient, { data, loading }] = useMutation(CREATE_CLIENT, {
@@ -38,7 +38,7 @@ const NewClient = ({ auth }) => {
     });
     toast.success('Cliente creado con éxito');
     router.push('/clients');
-    //form.current.reset();
+    // form.current.reset();
   };
 
   useEffect(() => {
@@ -46,12 +46,16 @@ const NewClient = ({ auth }) => {
   }, [data]);
 
   if (!auth) {
-    return <div className='bg-red-500 text-white text-3xl font-bold'>NO ESTAS AUTORIZADO</div>;
+    return (
+      <div className='bg-red-500 text-white text-3xl font-bold'>
+        NO ESTAS AUTORIZADO
+      </div>
+    );
   }
 
   return (
     <div className='flex flex-col items-center p-10'>
-      <Link href='/clients' passHref={true}>
+      <Link href='/clients' passHref>
         <i className='fas fa-arrow-left self-start' />
       </Link>
       <h2>Nuevo Cliente</h2>
@@ -69,6 +73,6 @@ const NewClient = ({ auth }) => {
       </form>
     </div>
   );
-};
+}
 
 export default NewClient;

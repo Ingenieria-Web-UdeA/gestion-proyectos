@@ -8,7 +8,10 @@ const prisma = new PrismaClient();
 //   name: string;
 // };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<any>
+) {
   if (req.method === 'GET') {
     console.log('hicieron un get');
     const users = await prisma.user.findMany();

@@ -16,7 +16,7 @@ import Link from 'next/link';
 //   };
 // }
 
-const Index = () => {
+function Index() {
   const [users, setUsers] = useState({});
 
   useEffect(() => {
@@ -42,6 +42,6 @@ const Index = () => {
       <Link href='/users/new'>Crear nuevo usuario</Link>
     </div>
   );
-};
+}
 
 export default Index;

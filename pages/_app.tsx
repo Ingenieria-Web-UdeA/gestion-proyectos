@@ -1,9 +1,15 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { ApolloClient, InMemoryCache, from, HttpLink, ApolloProvider } from '@apollo/client';
-import PrivateLayout from '../layout/PrivateLayout';
+import {
+  ApolloClient,
+  InMemoryCache,
+  from,
+  HttpLink,
+  ApolloProvider,
+} from '@apollo/client';
 import { SessionProvider } from 'next-auth/react';
+import PrivateLayout from '../layout/PrivateLayout';
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
