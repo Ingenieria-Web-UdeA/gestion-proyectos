@@ -25,14 +25,12 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
       <ApolloProvider client={client}>
-        <div>
-          <Head>
-            <title>Proyectos</title>
-          </Head>
-          <PrivateLayout>
-            <Component {...pageProps} />
-          </PrivateLayout>
-        </div>
+        <Head>
+          <title>{pageProps.name} | Gestión de Proyectos</title>
+        </Head>
+        <PrivateLayout pageAuth={pageProps.auth}>
+          <Component {...pageProps} />
+        </PrivateLayout>
       </ApolloProvider>
     </SessionProvider>
   );

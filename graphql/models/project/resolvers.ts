@@ -18,7 +18,7 @@ const ProjectResolvers = {
     },
   },
   Query: {
-    getProjects: async (parent, args) => {
+    getProjects: async () => {
       return await prisma.project.findMany({});
     },
     getProject: async (parent, args) => {

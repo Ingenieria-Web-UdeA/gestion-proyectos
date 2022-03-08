@@ -18,7 +18,7 @@ const ReportResolvers = {
     },
   },
   Query: {
-    getReports: async (parent, args) => {
+    getReports: async () => {
       return await prisma.report.findMany({});
     },
     getReport: async (parent, args) => {

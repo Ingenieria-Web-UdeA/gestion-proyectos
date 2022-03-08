@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
-import Footer from '../components/Footer';
+import React from 'react';
+import Footer from 'components/Footer';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signIn, useSession } from 'next-auth/react';
+import NotAuthorized from '@components/NotAuthorized';
 
-const PrivateLayout = ({ children }: any) => {
+const PrivateLayout = ({ pageAuth, children }: any) => {
   const { data: session, status } = useSession();
 
   if (status === 'loading') {
@@ -14,6 +15,10 @@ const PrivateLayout = ({ children }: any) => {
   if (!session) {
     signIn('auth0');
     return <Loading />;
+  }
+
+  if (!pageAuth) {
+    return <NotAuthorized />;
   }
 
   return (

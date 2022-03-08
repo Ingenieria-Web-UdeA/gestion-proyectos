@@ -28,7 +28,15 @@
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
     "no-use-before-define": "off",
-    "arrow-body-style": "warn",
+    "arrow-body-style": "off",
+    "no-unused-vars": [
+      2,
+      { "args": "after-used", "argsIgnorePattern": "^(parent|args)" }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      2,
+      { "args": "after-used", "argsIgnorePattern": "^(parent|args)" }
+    ],
     "no-underscore-dangle": "off",
     "import/prefer-default-export": "off",
     "no-nested-ternary": "warn",

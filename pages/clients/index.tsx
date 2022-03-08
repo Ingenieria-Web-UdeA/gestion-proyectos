@@ -8,7 +8,14 @@ import { DELETE_CLIENT, EDIT_CLIENT } from 'graphql/mutations/client';
 import { toast } from 'react-toastify';
 import { ButtonLoading } from '@components/ButtonLoading';
 import PrivateComponent from '@components/PrivateComponent';
+import { matchRoles } from 'utils/matchRoles';
 // import { getSession } from 'next-auth/react';
+
+export async function getServerSideProps(context) {
+  return {
+    props: { ...(await matchRoles(context)) },
+  };
+}
 
 const IndexClients = () => {
   const { data, loading } = useQuery(GET_CLIENTES, {
@@ -34,7 +41,7 @@ const IndexClients = () => {
             <th>Nombre</th>
             <th>Fecha de Actualización</th>
             <th>Fecha de Creación</th>
-            <PrivateComponent roleList={['Admin']}>
+            <PrivateComponent roleList={['Admin', 'Dev']}>
               <th>Acciones</th>
             </PrivateComponent>
           </thead>
@@ -80,7 +87,7 @@ const Cliente = ({ client }) => (
     <td>{client.name}</td>
     <td>{client.updatedAt}</td>
     <td>{client.createdAt}</td>
-    <PrivateComponent roleList={['Admin']}>
+    <PrivateComponent roleList={['Admin', 'Dev']}>
       <td>
         <EditDeleteButtons client={client} />
       </td>
