@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import formidable from 'formidable';
+import multiparty from 'multiparty';
 import cloudinary from 'cloudinary';
 
 export const config = {
@@ -13,16 +13,26 @@ export default async function handler(
   res: NextApiResponse<any>
 ) {
   if (req.method === 'POST') {
-    const form = new formidable.IncomingForm();
-    form.keepExtensions = true;
+    const form = new multiparty.Form();
+
     form.parse(req, (err, fields, files) => {
-      cloudinary.v2.config({
-        cloud_name: 'danyel117',
-        api_key: '739535791529797',
-        api_secret: 'j44WjCfvSjC6pcs68LHpBBuN6Ro',
-      });
-      cloudinary.v2.uploader.upload_stream(files.file.PersistentFile);
+      console.log(files.file[0]);
+      cloudinary.v2.config();
+      cloudinary.v2.uploader.upload_stream(
+        files.file[0].path,
+        (error, result) => {
+          if (error) {
+            console.log('Error in cloudinary.uploader.upload_stream\n', error);
+          } else {
+            console.log('Cloudinary audio info: ', result);
+          }
+        }
+      );
     });
+
+    // form.keepExtensions = true;
+    // form.parse(req, (err, fields, files) => {
+    // });
     res.send(200);
   }
 }
