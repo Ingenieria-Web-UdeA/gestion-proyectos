@@ -89,7 +89,7 @@ model Report {
 
 model Role {
   id        String        @id @default(cuid())
-  name      Enum_RoleName
+  name      Enum_RoleName @unique
   users     User[]
   pages     Page[]
   createdAt DateTime      @default(now())

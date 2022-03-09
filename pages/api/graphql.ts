@@ -40,7 +40,7 @@ export default cors(async (req, res) => {
     return false;
   }
   const data: any = await getSession({ req });
-  if (!data) {
+  if (!data && process.env.NODE_ENV === 'production') {
     res.status(401).send({ error: 'no autorizado' });
   }
   return functionHandler(req, res);

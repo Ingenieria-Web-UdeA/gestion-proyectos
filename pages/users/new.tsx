@@ -4,7 +4,7 @@ import Link from 'next/link';
 const New = () => (
   <div>
     New User
-    <Link href='/users'>Users</Link>
+    
   </div>
 );
 

@@ -1,42 +1,143 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Link from 'next/link';
-// import { PrismaClient } from '@prisma/client';
-// import safeJsonStringify from 'safe-json-stringify';
+import React, { useState } from 'react';
+import axios, { AxiosRequestConfig } from 'axios';
+import { matchRoles } from 'utils/matchRoles';
+import { Dialog } from '@mui/material';
+import useFormData from 'hooks/useFormData';
+import { ButtonLoading } from '@components/ButtonLoading';
+import { nanoid } from 'nanoid';
+import { CREATE_USER_ACCOUNT } from 'graphql/mutations/user';
+import { useMutation } from '@apollo/client';
+import { toast } from 'react-toastify';
 
-// const prisma = new PrismaClient();
+export async function getServerSideProps(context) {
+  // const options: AxiosRequestConfig = {
+  //   method: 'POST',
+  //   url: `https://${process.env.AUTH0_ISSUER}/oauth/token`,
+  //   data: {
+  //     grant_type: 'client_credentials',
+  //     client_id: process.env.AUTH0_API_ID,
+  //     client_secret: process.env.AUTH0_API_SECRET,
+  //     audience: `https://${process.env.AUTH0_ISSUER}/api/v2/`,
+  //   },
+  // };
 
-// export async function getServerSideProps() {
-//   const users = await prisma.user.findMany();
-//   console.log('traje los usuarios', users);
-//   return {
-//     props: {
-//       users: JSON.parse(safeJsonStringify(users)),
-//     }, // will be passed to the page component as props
-//   };
-// }
+  const options: AxiosRequestConfig = {
+    method: 'POST',
+    url: `https://${process.env.AUTH0_ISSUER}/oauth/token`,
+    data: {
+      grant_type: 'client_credentials',
+      client_id: process.env.AUTH0_API_ID,
+      client_secret: process.env.AUTH0_API_SECRET,
+      audience: `https://${process.env.AUTH0_ISSUER}/api/v2/`,
+    },
+  };
+  const TokenResponse = await axios.request(options);
+  const token = TokenResponse.data.access_token;
 
-const Index = () => {
-  const [users, setUsers] = useState({});
+  // console.log(TokenResponse);
 
-  useEffect(() => {
-    const fetchUsuarios = async () => {
-      const options: any = {
-        url: '/api/users',
-        method: 'get',
-        headers: { 'Content-Type': 'application/json' },
-      };
-      const userResponse = await axios.request(options);
-      setUsers(userResponse.data.datos);
-    };
-    fetchUsuarios();
-  }, []);
+  return {
+    props: { token, ...(await matchRoles(context)) },
+  };
+}
 
+const Index = ({ token }) => {
+  const [openDialog, setOpenDialog] = useState(false);
+  const closeDialog = () => {
+    setOpenDialog(false);
+  };
   return (
     <div>
-      Usuarios
-      {users && <span>users loaded</span>}
-      <Link href='/users/new'>Crear nuevo usuario</Link>
+      <h1>Gestion de usuarios</h1>
+      <button
+        onClick={() => setOpenDialog(true)}
+        type='button'
+        className='button-primary'
+      >
+        Crear nuevo usuario
+      </button>
+      <Dialog open={openDialog} onClose={closeDialog}>
+        <CreateUserDialog closeDialog={closeDialog} token={token} />
+      </Dialog>
+    </div>
+  );
+};
+
+const CreateUserDialog = ({ closeDialog, token }) => {
+  const { form, formData, updateFormData } = useFormData(null);
+  const [createUser, { loading }] = useMutation(CREATE_USER_ACCOUNT);
+
+  const submitForm = async (e) => {
+    e.preventDefault();
+    const password = nanoid();
+    const options: AxiosRequestConfig = {
+      method: 'POST',
+      url: 'https://ingenieria-web.us.auth0.com/api/v2/users',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      data: {
+        email: formData.email,
+        password: `${password}*`,
+        connection: 'Username-Password-Authentication',
+      },
+    };
+    try {
+      const userCreateResponse = await axios.request(options);
+      await createUser({
+        variables: {
+          data: {
+            email: userCreateResponse.data.email,
+            name: userCreateResponse.data.name,
+            image: userCreateResponse.data.picture,
+            auth0Id: userCreateResponse.data.user_id,
+            role: formData.role,
+          },
+        },
+      });
+      toast.success(`Usuario creado correctamente con la clave ${password}`, {
+        autoClose: false,
+      });
+      closeDialog();
+    } catch (error) {
+      toast.error('Error creando el usuario');
+      closeDialog();
+    }
+  };
+
+  return (
+    <div className='p-5 flex flex-col items-center'>
+      <h1>Crear nuevo usuario</h1>
+      <form
+        ref={form}
+        onChange={updateFormData}
+        onSubmit={submitForm}
+        className='flex flex-col items-start'
+      >
+        <label htmlFor='email'>
+          <span className='font-bold mx-2'>Email:</span>
+          <input
+            name='email'
+            placeholder='test@test.com'
+            required
+            type='email'
+          />
+        </label>
+        <label htmlFor='role' className='my-2'>
+          <span className='font-bold mx-2'>Rol:</span>
+          <select name='role' required>
+            <option disabled selected>
+              Seleccione un rol
+            </option>
+            <option>Admin</option>
+            <option>Dev</option>
+          </select>
+        </label>
+        <div className='w-full flex justify-center'>
+          <ButtonLoading isSubmit text='Crear Usuario' loading={loading} />
+        </div>
+      </form>
     </div>
   );
 };
