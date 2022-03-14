@@ -4,6 +4,7 @@ import { RoleTypes } from 'graphql/models/role/types';
 import { ClientTypes } from 'graphql/models/client/types';
 import { ProjectTypes } from './models/project/types';
 import { ReportTypes } from './models/report/types';
+import { ProfileTypes } from './models/profile/types';
 
 const genericTypes = gql`
   scalar Date
@@ -25,4 +26,12 @@ const genericTypes = gql`
   }
 `;
 
-export const types = [genericTypes, UserTypes, RoleTypes, ClientTypes, ProjectTypes, ReportTypes];
+export const types = [
+  genericTypes,
+  UserTypes,
+  RoleTypes,
+  ClientTypes,
+  ProjectTypes,
+  ReportTypes,
+  ProfileTypes,
+];

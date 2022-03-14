@@ -9,6 +9,7 @@ const UserTypes = gql`
     role: Role
     emailVerified: Date
     isDeveloperOf: [Project]
+    profile: Profile
     createdAt: Date
     updatedAt: Date
   }
