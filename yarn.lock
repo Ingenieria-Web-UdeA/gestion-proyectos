@@ -2661,6 +2661,11 @@ raw-body@2.3.2:
     iconv-lite "0.4.19"
     unpipe "1.0.0"
 
+react-cloudinary-upload-widget@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/react-cloudinary-upload-widget/-/react-cloudinary-upload-widget-1.5.0.tgz#7aec5a07643c92d603e386592194c17e7006473d"
+  integrity sha512-8DTinl3f5Gr2jWOxv1W5LlE31Wy0EzMb6VVzC5V+12VdPCbkSJMaG+2hc2x4BtDFu6FrBy4a8pYIjBVuuY+j3A==
+
 react-dom@17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"

@@ -2,6 +2,13 @@ import prisma from 'config/prisma';
 
 const UserResolvers = {
   User: {
+    profile: async (parent, args) => {
+      return await prisma.profile.findUnique({
+        where: {
+          userId: parent.id,
+        },
+      });
+    },
     role: async (parent, args) => {
       return await prisma.role.findUnique({
         where: {

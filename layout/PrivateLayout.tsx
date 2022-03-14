@@ -8,6 +8,8 @@ import NotAuthorized from '@components/NotAuthorized';
 const PrivateLayout = ({ pageAuth, children }: any) => {
   const { data: session, status } = useSession();
 
+  console.log(session);
+
   if (status === 'loading') {
     return <Loading />;
   }

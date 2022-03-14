@@ -10,6 +10,7 @@ import {
 } from '@apollo/client';
 import { SessionProvider } from 'next-auth/react';
 import PrivateLayout from 'layout/PrivateLayout';
+import { WidgetLoader } from 'react-cloudinary-upload-widget';
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -25,6 +26,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
       <ApolloProvider client={client}>
+        <WidgetLoader />
         <Head>
           <title>{pageProps.name} | Gestión de Proyectos</title>
         </Head>

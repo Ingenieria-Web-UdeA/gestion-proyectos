@@ -6,11 +6,12 @@ const ProjectTypes = gql`
     name: String
     description: String
     price: Float
-    dueDate: Date
-    client: Client
-    clientId: String
-    developers: [User]
-    reports: [Report]
+    document: String
+    # dueDate: Date
+    # client: Client
+    # clientId: String
+    # developers: [User]
+    # reports: [Report]
     createdAt: Date
     updatedAt: Date
   }
@@ -23,8 +24,9 @@ const ProjectTypes = gql`
     name: String!
     description: String!
     price: Float!
-    dueDate: Date!
-    clientId: String!
+    document: String!
+    # dueDate: Date!
+    # clientId: String!
   }
 
   input ProjectUpdateInput {

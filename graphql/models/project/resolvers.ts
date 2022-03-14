@@ -2,20 +2,20 @@ import prisma from 'config/prisma';
 
 const ProjectResolvers = {
   Project: {
-    reports: async (parent, args) => {
-      return await prisma.report.findMany({
-        where: {
-          projectId: parent.id,
-        },
-      });
-    },
-    client: async (parent, args) => {
-      return await prisma.client.findUnique({
-        where: {
-          id: parent.clientId,
-        },
-      });
-    },
+    // reports: async (parent, args) => {
+    //   return await prisma.report.findMany({
+    //     where: {
+    //       projectId: parent.id,
+    //     },
+    //   });
+    // },
+    // client: async (parent, args) => {
+    //   return await prisma.client.findUnique({
+    //     where: {
+    //       id: parent.clientId,
+    //     },
+    //   });
+    // },
   },
   Query: {
     getProjects: async () => {
@@ -34,7 +34,7 @@ const ProjectResolvers = {
       return await prisma.project.create({
         data: {
           ...args.data,
-          dueDate: new Date(args.data.dueDate),
+          // dueDate: new Date(args.data.dueDate),
         },
       });
     },

@@ -34,11 +34,11 @@ model Account {
 }
 
 model Client {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
-  projects  Project[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  // projects  Project[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Page {
@@ -51,13 +51,14 @@ model Page {
 }
 
 model Profile {
-  id        String   @id @default(cuid())
-  phone     String
-  address   String
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  phone       String?
+  address     String?
+  customImage String?
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Project {
@@ -65,9 +66,10 @@ model Project {
   name        String
   description String
   price       Float
-  dueDate     DateTime
-  client      Client   @relation(fields: [clientId], references: [id])
-  clientId    String
+  document    String
+  // dueDate     DateTime
+  // client      Client   @relation(fields: [clientId], references: [id])
+  // clientId    String
   developers  User[]
   reports     Report[]
   createdAt   DateTime @default(now())
