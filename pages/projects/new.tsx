@@ -18,6 +18,7 @@ const NewProject = () => {
   const { form, formData, updateFormData } = useFormData(null);
   const [fileUrl, setFileUrl] = useState<string>(null);
   const successCallback = (e) => {
+    console.log(e);
     setFileUrl(e.info.url);
   };
   const errorCallback = () => {
@@ -57,7 +58,7 @@ const NewProject = () => {
           <FileUpload
             folder='project-documents'
             text='Upload Document'
-            resourceType='auto'
+            resourceType='raw'
             successCallback={successCallback}
             errorCallback={errorCallback}
           />
