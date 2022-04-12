@@ -25,10 +25,11 @@ export default NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
     Auth0Provider({
-      wellKnown: 'https://ingenieria-web.us.auth0.com',
+      wellKnown: process.env.AUTH0_DOMAIN,
       clientId: process.env.AUTH0_CLIENT_ID,
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
       issuer: process.env.AUTH0_ISSUER,
+      authorization: `https://${process.env.AUTH0_DOMAIN}/authorize?response_type=code&prompt=login`,
     }),
   ],
 });

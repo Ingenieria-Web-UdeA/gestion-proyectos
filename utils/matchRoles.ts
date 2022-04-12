@@ -4,10 +4,16 @@ import { getSession } from 'next-auth/react';
 const matchRoles = async (context) => {
   const data: any = await getSession({ req: context.req });
   const userRole = data?.user?.role?.name;
+  let url = context.resolvedUrl.split('?')[0];
+  const { id } = context.query;
+
+  if (id) {
+    url = url.replace(id, '[id]');
+  }
 
   const page = await prisma.page.findUnique({
     where: {
-      path: context.resolvedUrl,
+      path: url,
     },
     include: {
       roles: true,
